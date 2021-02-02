@@ -1,9 +1,8 @@
 
 import javax.swing.JPanel;
-
 import java.awt.*;
 import java.util.ArrayList;
-
+@SuppressWarnings("serial")
 /**
  * A clean and simple loading with a completion animation
  * @author Teeds - Theo K
@@ -43,6 +42,7 @@ public class LoadingAnimation extends JPanel {
     int Position = 0;
     int Size = 40;
     int circleSize = 0;
+
     /**
      * Creates the loading animation object
      * @param width width of the animation
@@ -67,6 +67,10 @@ public class LoadingAnimation extends JPanel {
             parents.add(p);
         }
     }
+
+    /**
+     * Draws the loading animation and success / failure
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics = (Graphics2D) g;
@@ -85,20 +89,16 @@ public class LoadingAnimation extends JPanel {
             graphics.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), Alphas[1]));
             graphics.drawArc(2, 2, width, height, Position, Size);
         }
-        if(steps[1]) {
-            graphics.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), Alphas[2]));
-            graphics.fillOval((width / 2) - (circleSize / 2) + 2,  (height / 2) - (circleSize / 2) + 2, circleSize, circleSize);
-        }
         if(steps[2]) {
-            graphics.setColor(new Color(255, 255, 255, Alphas[3]));
+            graphics.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), Alphas[3]));
             if(good) {
-                graphics.setStroke(new BasicStroke(2.7f));
+                graphics.setStroke(new BasicStroke(2.1f));
 
                 graphics.drawLine(getPoint(3.8) + 2, getPoint(1.9) + 2, getPoint(2.1) + 2, getPoint(1.4) + 2);
                 graphics.drawLine(getPoint(2.1) + 2, getPoint(1.4) + 2,  getPoint(1.3) + 2, getPoint(3.2) + 2);
 
             } else {
-                graphics.setStroke(new BasicStroke(2.2f));
+                graphics.setStroke(new BasicStroke(2.1f));
 
                 graphics.drawLine(getPoint(3.4) + 2, getPoint(3.4) + 2, getPoint(1.4) + 2, getPoint(1.5) + 2);
                 graphics.drawLine(getPoint(3.4) + 2, getPoint(1.5) + 2,  getPoint(1.4) + 2, getPoint(3.4) + 2);
@@ -113,6 +113,7 @@ public class LoadingAnimation extends JPanel {
     private int getPoint(double percent) {
         return (int) (width / percent);
     }
+    
     /**
      * Finishes the loading animation
      * @param b wether or not it was successful
@@ -169,17 +170,12 @@ public class LoadingAnimation extends JPanel {
                 Thread.sleep(10);
             } catch(Exception e) {}
         }
-        steps[1] = true;
         changeAlpha(true, 2, 255);
         IncreaseSize circle = new IncreaseSize(0, (width + 1));
         circle.setIncrement(1);
         circle.setSleepTime(10);
-        
-        while(circle.getSize() < (width + 1)) {
-            this.circleSize = circle.getIncrementSize();
-            repaint();
-        }
         steps[2] = true;
+        changeAlpha(false, 1, 0);
         changeAlpha(true, 3, 255);
         update();
     }
